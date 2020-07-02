@@ -17,7 +17,8 @@ pipeline {
        
          stage('Deliver') {
             steps {
-                sh 'npm start'
+                sh 'npm run build'
+                sh 'http-server ./build/'
                 sh './jenkins/scripts/kill.sh'
             }
         }
