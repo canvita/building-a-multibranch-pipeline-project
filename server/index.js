@@ -5,7 +5,7 @@ const bodyParser = require("koa-bodyparser");
 const static = require("koa-static");
 const app = new Koa();
 const { getOrder } = require("./apis");
-const { PORT } = require("../config/config");
+const { PORT } = require("../configapi/config");
 
 const router = new Router();
 
