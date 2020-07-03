@@ -18,8 +18,7 @@ pipeline {
          stage('Deliver') {
             steps {
                 sh 'npm run build'
-                sh 'node ./server/index.js'
-                sh './jenkins/scripts/kill.sh'
+                sh 'npm run start-server'
             }
         }
     }
