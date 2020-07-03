@@ -1,12 +1,19 @@
 import React, { Component, useState, useEffect } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import { Table, Input, Button } from "antd";
 import axios from "axios";
-
+import Pieces from "./Pieces";
 const columns = [
   { title: "订单号", dataIndex: "id" },
-  { title: "最新物流", dataIndex: "latest" },
+  { title: "日期", dataIndex: "date" },
+  { title: "时间", dataIndex: "time" },
+  { title: "最新物流", dataIndex: "location" },
+];
+
+const expendCol = [
+  { title: "日期", dataIndex: "date" },
+  { title: "时间", dataIndex: "time" },
+  { title: "最新物流", dataIndex: "location" },
 ];
 const IDS_KEY = "IDS_KEY";
 const App = () => {
@@ -23,14 +30,12 @@ const App = () => {
     if (cacheIds) {
       setLoading(true);
       const { data } = await axios.get(
-        "http://localhost:3000/queryOrder?id=" + cacheIds
+        `http://localhost:${3333}/queryOrder?id=${cacheIds}`
       );
       const formatData = data.results.map((v) => {
-        const {
-          id,
-          checkpoints: { location },
-        } = v;
-        return { id, latest: location };
+        const { id, checkpoints } = v;
+        const [{ location, date, time, pIds }] = checkpoints;
+        return { id, location, date, time, checkpoints, pIds };
       });
       setDataSource(formatData);
       setLoading(false);
@@ -56,6 +61,33 @@ const App = () => {
         columns={columns}
         loading={loading}
         dataSource={datasource}
+        rowKey="id"
+        expandable={{
+          expandedRowRender: (record) => (
+            <table>
+              <tr>
+                {expendCol.map((th) => {
+                  return <th key={th.dataIndex}>{th.title}</th>;
+                })}
+                <th>Pieces</th>
+              </tr>
+              {record.checkpoints.map((row) => {
+                return (
+                  <tr className="expend">
+                    {expendCol.map((th) => {
+                      return <td key={th.dataIndex}>{row[th.dataIndex]}</td>;
+                    })}
+                    <td>
+                      <Pieces data={record.pIds} />
+                    </td>
+                  </tr>
+                );
+              })}
+            </table>
+          ),
+          rowExpandable: (record) => !!record.checkpoints,
+        }}
+        pagination={false}
       ></Table>
     </div>
   );

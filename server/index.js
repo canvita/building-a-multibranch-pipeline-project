@@ -5,6 +5,7 @@ const bodyParser = require("koa-bodyparser");
 const static = require("koa-static");
 const app = new Koa();
 const { getOrder } = require("./apis");
+const { PORT } = require("../config/config");
 
 const router = new Router();
 
@@ -16,11 +17,12 @@ app.use(static("../build"));
 
 router.get("/queryOrder", async (ctx) => {
   const { id } = ctx.query;
+  console.log(id);
+
   const data = await getOrder(id);
   ctx.body = data;
 });
 
-const PORT = 3333;
 app.listen(PORT, () => {
-  console.log("server on " + PORT);
+  console.log("server on" + PORT);
 });
