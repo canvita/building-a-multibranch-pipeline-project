@@ -30,7 +30,7 @@ const App = () => {
     if (cacheIds) {
       setLoading(true);
       const { data } = await axios.get(
-        `http://localhost:${3333}/queryOrder?id=${cacheIds}`
+        `https://3q2o636102.wicp.vip/queryOrder?id=${cacheIds}`
       );
       const formatData = data.results.map((v) => {
         const { id, checkpoints } = v;
